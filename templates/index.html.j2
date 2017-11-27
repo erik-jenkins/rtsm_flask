@@ -1,0 +1,76 @@
+{% extends 'base.html.j2' %}
+
+{% block styles %}
+    label {
+        margin-bottom: 0;
+    }
+
+    .form-row {
+        margin-bottom: 10px;
+    }
+
+    #search-button {
+        float: right;
+    }
+
+    #search-button:hover {
+        cursor: pointer;
+    }
+{% endblock %}
+
+{% block content %}
+    <h1 class="d-inline-block mb-4">reTweet Song Manager <small class="text-muted">Download songs from Xeno-Canto</small></h1>
+
+    <form action="/" method="POST">
+        <div class="form-row">
+            <div class="col">
+                <label for="query">Query</label>
+                <input type="text" class="form-control" id="query" name="query" placeholder="black-capped chickadee">
+            </div>
+        </div>
+        <div class="form-row">
+            <div class="col">
+                <label for="genus">Genus</label>
+                <input type="text" class="form-control" id="genus" name="genus" placeholder="Poecile">
+            </div>
+            <div class="col">
+                <label for="recordist">Recordist</label>
+                <input type="text" class="form-control" id="recordist" name="recordist" placeholder="John Doe">
+            </div>
+        </div>
+        <div class="form-row">
+            <div class="col">
+                <label for="country">Country</label>
+                <input type="text" class="form-control" id="country" name="country" placeholder="Canada">
+            </div>
+            <div class="col">
+                <label for="location">Location</label>
+                <input type="text" class="form-control" id="location" name="location" placeholder="Tambopata">
+            </div>
+        </div>
+        <div class="form-row">
+            <div class="col">
+                <label for="remarks">Remarks</label>
+                <input type="text" class="form-control" id="remarks" name="remarks" placeholder="Playback">
+            </div>
+            <div class="col">
+                <label for="also">Background species</label>
+                <input type="text" class="form-control" id="also" name="also" placeholder="Corvidae">
+            </div>
+        </div>
+        <div class="form-row">
+            <div class="col">
+                <label for="latitude">Latitude</label>
+                <input type="text" class="form-control" id="latitude" name="latitude" placeholder="42.393761">
+            </div>
+            <div class="col">
+                <label for="longitude">Longitude</label>
+                <input type="text" class="form-control" id="longitude" name="longitude" placeholder="-72.528487">
+            </div>
+        </div>
+
+        <button type="submit" class="btn btn-primary btn-lg" id="search-button">Search</button>
+    </form>
+
+
+{% endblock %}

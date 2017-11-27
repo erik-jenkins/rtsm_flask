@@ -1,0 +1,38 @@
+{% extends 'base.html.j2' %}
+
+{% block content %}
+    <style type="text/css">
+    </style><h1 class="mb-4">Results</h1>
+
+    <form action="">
+    <table class="table table-sm">
+        <thead>
+            <tr>
+                <th scope="col">Select</th>
+                <th scope="col">English</th>
+                <th scope="col">Genus</th>
+                <th scope="col">Species</th>
+                <th scope="col">Country</th>
+                <th scope="col">Type</th>
+                <th scope="col">Quality</th>
+                <th scope="col">Link</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for recording in recordings %}
+            <tr>
+                <td><input type="checkbox" class="form-check-input"></td>
+                <td>{{ recording['en'] }}</td>
+                <td>{{ recording['gen'] }}</td>
+                <td>{{ recording['sp'] }}</td>
+                <td>{{ recording['cnt'] }}</td>
+                <td>{{ recording['type'] }}</td>
+                <td>{{ recording['q'] }}</td>
+                <td><a href="{{ recording['file'] }}">Download</a></td>
+            </tr>
+        {% endfor %}
+
+        </tbody>
+    </table>
+    </form>
+{% endblock %}
