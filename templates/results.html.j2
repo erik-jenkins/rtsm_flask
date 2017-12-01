@@ -5,10 +5,9 @@
     </style><h1 class="mb-4">Results</h1>
 
     <form action="">
-    <table class="table table-sm">
+    <table class="table table-sm display" cellspacing="0" width="100%" id="recordings">
         <thead>
             <tr>
-                <th scope="col">Select</th>
                 <th scope="col">English</th>
                 <th scope="col">Genus</th>
                 <th scope="col">Species</th>
@@ -21,18 +20,69 @@
         <tbody>
         {% for recording in recordings %}
             <tr>
-                <td><input type="checkbox" class="form-check-input"></td>
                 <td>{{ recording['en'] }}</td>
                 <td>{{ recording['gen'] }}</td>
                 <td>{{ recording['sp'] }}</td>
                 <td>{{ recording['cnt'] }}</td>
                 <td>{{ recording['type'] }}</td>
                 <td>{{ recording['q'] }}</td>
-                <td><a href="{{ recording['file'] }}">Download</a></td>
+                <td><a data-id="{{ recording['id'] }}" href="{{ recording['file'] }}">Download</a></td>
             </tr>
         {% endfor %}
 
         </tbody>
     </table>
     </form>
+{% endblock %}
+
+{% block scripts %}
+    <script type="text/javascript" src="https://cdn.datatables.net/v/bs4/dt-1.10.16/b-1.4.2/sl-1.2.3/datatables.min.js"></script>
+    <script>
+    $(document).ready(function() {
+        $('#recordings').DataTable({
+            dom: 'Bfrtip',
+            buttons: [
+                'selectAll',
+                'selectNone',
+                {
+                    extend: 'selected',
+                    text: 'Download selected recordings',
+                    action: function (e, dt, node, config) {
+                        var selectedRowData = dt.rows({selected: true}).data();
+                        var selectedFileIds = [];
+
+                        for (var i = 0; i < selectedRowData.length; i++) {
+                            var anchorTag = selectedRowData[i][6];
+                            var parentDiv = document.createElement('div');
+                            parentDiv.innerHTML = anchorTag;
+                            var anchorElement = parentDiv.firstElementChild;
+                            var fileId = +anchorElement.getAttribute('data-id');
+                            selectedFileIds.push(fileId);
+                        }
+
+                        // send ajax request
+                        $.ajax({
+                            method: 'POST',
+                            url: '/download',
+                            data: {
+                                fileIds: JSON.stringify(selectedFileIds),
+                                query: '{{ query }}',
+                            }
+                        }).done(function(msg) {
+                            console.log(msg);
+                        });
+                    }
+                },
+            ],
+            language: {
+                buttons: {
+                    selectAll: 'Select all recordings',
+                    selectNone: 'Deselect all',
+                }
+            },
+            pageLength: 50,
+            select: true,
+        });
+    });
+    </script>
 {% endblock %}
