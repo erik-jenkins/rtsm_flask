@@ -1,6 +1,7 @@
-import json
+import json, os, zipfile, pathlib
+from io import BytesIO
 
-from flask import Flask, render_template, request, session, redirect, url_for, jsonify
+from flask import Flask, render_template, request, redirect, url_for, send_file, Response
 from utils import get_results, get_recording_files
 
 app = Flask(__name__)
@@ -35,12 +36,19 @@ def results():
 
 @app.route('/download', methods=['POST'])
 def download():
-    # file ids
     file_ids_json = request.form['fileIds']
     file_ids = json.loads(file_ids_json)
     query = request.form['query']
-    get_recording_files(file_ids, query)
-    return jsonify(message='hello, world!'), 200
+    tmp_folder_path = pathlib.Path(get_recording_files(file_ids, query))
+
+    data = BytesIO()
+    with zipfile.ZipFile(data, mode='w') as z:
+        for filename in tmp_folder_path.iterdir():
+            z.write(filename)
+        data.seek(0)
+        return Response(data,
+                        mimetype='application/zip',
+                        headers={'Content-Disposition': 'attachment;filename=data.zip'})
 
 
 if __name__ == '__main__':
